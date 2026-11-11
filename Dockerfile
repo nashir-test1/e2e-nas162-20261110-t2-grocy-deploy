@@ -24,12 +24,16 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 composer install \
         --no-dev --prefer-dist --no-progress --no-interaction --optimize-autoloader \
     && a2enmod rewrite \
     && sed -i 's/^Listen 80$/Listen 8080/' /etc/apache2/ports.conf \
-    && mkdir -p data /var/run/apache2 /var/lock/apache2 \
-    && chown -R www-data:www-data data /var/run/apache2 /var/lock/apache2
+    && mkdir -p data \
+    && chown -R www-data:www-data data
 COPY deploy/apache.conf /etc/apache2/sites-available/000-default.conf
 COPY deploy/entrypoint.sh /usr/local/bin/grocy-entrypoint
 RUN chmod 755 /usr/local/bin/grocy-entrypoint
 ENV GROCY_DATAPATH=/var/www/html/data
+ENV APACHE_RUN_DIR=/tmp/apache2 \
+    APACHE_PID_FILE=/tmp/apache2/apache2.pid \
+    APACHE_LOCK_DIR=/tmp/apache2-lock \
+    APACHE_LOG_DIR=/tmp/apache2-log
 USER www-data
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s CMD php -r 'exit(@file_get_contents("http://127.0.0.1:8080/") === false ? 1 : 0);'
