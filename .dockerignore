@@ -1,0 +1,9 @@
+.git
+.github
+.devtools
+.vscode
+data
+node_modules
+packages
+public/packages
+Dockerfile.*

@@ -1,0 +1,12 @@
+services:
+  grocy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - e2e-nas162-20261110-t2-grocy-data:/var/www/html/data
+
+volumes:
+  e2e-nas162-20261110-t2-grocy-data:
